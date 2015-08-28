@@ -3,6 +3,7 @@ class User
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   after_create :create_root_folder
+  before_create :generate_access_token
   
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
@@ -23,7 +24,7 @@ class User
   field :current_sign_in_at, type: Time
   field :last_sign_in_at,    type: Time
   field :current_sign_in_ip, type: String
-  field :last_sign_in_ip,    type: String
+  field :last_sign_in_ip,    type: String 
 
   ## Confirmable
   # field :confirmation_token,   type: String
@@ -37,12 +38,13 @@ class User
   # field :locked_at,       type: Time
 
   field :admin, type: Boolean, default: false
+  field :api_key
   has_one :folder
   
   def name 
     return email.scan(/[\w\d]+/).first
   end
-  
+
   def is_admin?
     return self.admin
   end
@@ -52,4 +54,11 @@ class User
     self.folder = Folder.new(:name => folder_name)
   end
   
+  def generate_access_token
+    begin
+      key = SecureRandom.hex
+    end while !User.where(api_key => key).first.nil?
+    self.api_key = key
+  end
+
 end

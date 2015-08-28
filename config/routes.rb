@@ -22,7 +22,12 @@ Rails.application.routes.draw do
 
   resources :folder
   resources :item
-  
+
+  namespace :api do
+    resources :api, path: ''
+    resources :folder
+    resources :item
+  end
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

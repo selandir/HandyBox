@@ -52,9 +52,10 @@ gem 'simple_form'
 gem 'less-rails'
 gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
 
-# users
+# users auth
 gem 'devise'
 
+# fa
 gem "font-awesome-rails"
 
 #For nested folders in filebox
