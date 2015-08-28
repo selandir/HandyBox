@@ -1,0 +1,165 @@
+
+<ul class="list-inline">
+  <li onclick="fadeNewFileForm()" class="hover">
+    <span class="fa-stack">
+      <i class="fa fa-file-o fa-stack-2x"></i>
+      <i class="fa fa-plus fa-stack-1x"></i>
+    </span>
+    Dodaj plik
+  </li>
+  <li class="hover">
+    <span class="fa-stack">
+      <i class="fa fa-folder-o fa-stack-2x"></i>
+      <i class="fa fa-plus fa-stack-1x"></i>
+    </span>
+    Dodaj folder
+  </li>
+</ul>
+
+<div class="filebox-container filebox-title">
+  <div class="name">
+    Nazwa
+  </div>
+  <div class="size">
+    Rozmiar
+  </div>  
+  <div class="options">
+    Opcje
+  </div>
+</div>
+
+<div id="slidable" style="display:none;">
+
+<% @folder_list.each do |folder| %>
+  <div class="filebox-container" style="opacity: 0.2;">
+    <a href="javascript:void(0)">
+      <div class="name">
+        <i class="fa fa-folder-o fa-lg"></i> 
+        <%= folder.name %>
+      </div>
+    </a>
+    <div class="size">
+      <%= number_to_human_size folder.size %>
+    </div>
+    <div class="options">
+      <i class="fa fa-download fa-lg" style="color: white;"></i>   
+      <i class="fa fa-cog fa-lg"></i>
+      <i class="fa fa-pencil fa-lg"></i>
+      <i class="fa fa-times fa-lg"></i>
+    </div>
+  </div>
+  
+  <% folder.item.each_with_index do |item, i| %>
+  <div id="<%= item.id %>" class="filebox-container">
+    <%= link_to show_image_path(:folder_id => item.folder, :item_id => item) do %>
+      <div class="name-item">
+        <% if item.is_image? %>
+          <i class="fa fa-file-image-o fa-lg"></i> 
+        <% else %>
+          <i class="fa fa-file-o fa-lg"></i>
+        <% end %>
+        
+        <% if item.attachment.url.nil? %>
+          <%= "abcdefgh"[1..rand(7)+1] %>.ext
+        <% else %>
+          <%= item.filename %>
+        <% end %>
+      </div>
+    <% end %>
+    <div class="size">
+      <%= number_to_human_size item.size %>
+    </div>
+    <div class="options">
+      <%= link_to download_file_path(:folder_id => item.folder, :item_id => item) do %>
+        <i class="fa fa-download fa-lg"></i>     
+      <% end %>
+      <i class="fa fa-cog fa-lg"></i>
+      <i class="fa fa-pencil fa-lg"></i>
+      <a id="<%= item.id %>_a" href="javascript:void(0)" onClick='deleteFile("<%= item.folder.id %>", "<%= item.id %>")'>
+        <i class="fa fa-times fa-lg"></i>
+      </a>
+    </div>
+  </div>
+  <% end %>
+
+<% end %>
+</div>
+
+<div class="filebox-container filebox-footer">
+  <div class="name">
+    <%= @folder_list.count %> folder, X plików
+  </div>
+  <div class="options">
+    
+  </div>
+</div>
+
+
+<div class="new-file-form"></div>
+
+<style>
+
+#jumbotron-content {
+  height: 100px;
+  border: 0px lightgray solid ;
+}
+.body-shadow {
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: #000;
+  display: none;
+  opacity: 0.5;
+  z-index: 1;
+}
+.new-file-form{
+  position: absolute;
+  z-index: 2;
+  border: 2px black solid;
+  border-radius: 10px;
+  width: 500px;
+  height: 300px;
+  top: 5%;
+  left: 10%;
+  display: none;
+}
+</style>
+<script>
+
+function fadeNewFileForm() {
+  $('#jumbotron-content').fadeOut('fast', function(){
+    $('#jumbotron-content').html('<%= escape_javascript(render('new_file')).html_safe %>');
+    $('#jumbotron-content').fadeIn();
+  });
+};
+
+$('#slidable').slideDown();
+
+function deleteFile(folder_id, file_id){
+  var cross = $('#' + file_id + '_a')
+  cross.fadeOut('fast', function(){
+    cross.html('<i class="fa fa-spinner fa-spin"></i>');
+    cross.fadeIn('fast');
+  });
+
+  $.ajax({
+    url: "/filebox/" + folder_id + "/item/" + file_id + "/delete_item",
+    type: 'DELETE',
+    success: function(result) {
+      cross.fadeOut('fast', function(){
+        cross.html('<i class="fa fa-check"></i>');
+        cross.fadeIn('fast', function(){
+          $('#'+file_id).slideUp()
+        });
+      });
+    }    
+  });
+
+};
+
+var jso = $.get("http://selandir.pl:3000/filebox/#{@folder_list.first.id.to_s}/get_folders_and_items.json");
+console.log(jso);
+</script>
+

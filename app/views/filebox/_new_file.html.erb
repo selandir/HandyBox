@@ -1,0 +1,16 @@
+<div class="row">
+<div class="col-md-4">
+<%= simple_form_for @file, :url => {:action => "create"}, :html => {:class => "form-inline"} do |f| %>
+
+  <div class="form-group">
+    <%= f.input :attachment, :label => false, :as => "file", :wrapper => false, :input_html => {:class => ""}, multiple: true %>
+  </div>
+  <br> <br>
+  <div class="form-group">
+    <%= f.button :submit, :wrapper => false, :class => "btn btn-primary" %>
+    <%#= link_to t('cancel'), @file.new? ? filebox_index_path : filebox_path(@file), :class => "btn" %>
+  </div>
+
+<% end %>
+</div>
+</div>

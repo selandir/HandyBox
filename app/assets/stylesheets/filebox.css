@@ -1,0 +1,8 @@
+#notice{
+  left:40%;
+  top:50px;
+  position:absolute;
+  z-index:10000;
+  width:20%;
+  display: none;
+}
