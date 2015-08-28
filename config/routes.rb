@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   resources :item
 
   namespace :api do
-    resources :api, path: ''
+    resources :api, path: '', except: [:show, :edit, :update, :new, :update, :destroy]
     resources :folder
     resources :item
   end
