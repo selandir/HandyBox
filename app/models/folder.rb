@@ -36,7 +36,7 @@ class Folder
   end
 
   def is_empty?
-    children.empty? && item.empty?
+    return children.empty? && item.empty?
   end
 
 end

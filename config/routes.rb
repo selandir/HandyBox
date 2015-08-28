@@ -19,6 +19,10 @@ Rails.application.routes.draw do
   resources :filebox do
     post 'create_file' => 'filebox#create_file'
   end
+
+  resources :folder
+  resources :item
+  
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
