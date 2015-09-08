@@ -23,8 +23,11 @@ Rails.application.routes.draw do
   resources :folder
   resources :item
 
+  get 'api/get_key' => 'api/api#get_key'
+  get 'api/regenerate_key' => 'api/api#regenerate_key'
+
   namespace :api do
-    resources :api, path: '', except: [:show, :edit, :update, :new, :update, :destroy]
+    resources :api, path: '', except: [:show, :edit, :update, :new, :update, :destroy, :create]
     resources :folder
     resources :item
   end
